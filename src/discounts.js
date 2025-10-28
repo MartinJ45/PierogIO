@@ -64,12 +64,15 @@ function applyCoupon(code, order) {
   }
   
   if (code === 'FIRST10') {
-    // Return positive 10% of subtotal (in cents)
+    // FIRST10 only applies when order subtotal is over $20 (2000 cents)
     let subtotal = 0;
     for (const item of order.items) {
       subtotal += item.unitPriceCents * item.qty;
     }
-    return Math.floor(subtotal * 0.10);
+    if (subtotal > 2000) {
+      return Math.floor(subtotal * 0.10);
+    }
+    return 0;
   }
   
   return 0;

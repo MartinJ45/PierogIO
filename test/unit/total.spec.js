@@ -96,5 +96,18 @@ describe('Order Calculations', () => {
       expect(d).toBeGreaterThan(0);
       expect(d).toBe(Math.floor(subtotalCents * 0.10));
     });
+
+    it('FIRST10 does not apply when order subtotal is $20 or less', () => {
+      const order = {
+        items: [
+          { sku: 'P3-SMALL', title: 'Small Pack', kind: 'hot', qty: 2, unitPriceCents: 1000, addOns: [] } // subtotal = 2000
+        ]
+      };
+      const profile = { tier: 'guest' };
+
+      const d = discounts(order, profile, 'FIRST10');
+      expect(Number.isInteger(d)).toBe(true);
+      expect(d).toBe(0);
+    });
   });
 });
