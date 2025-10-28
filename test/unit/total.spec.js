@@ -34,6 +34,7 @@ describe('Order Calculations', () => {
       const orderTotal = total(order, context);
       expect(orderTotal).toBeGreaterThan(0);
       expect(Number.isInteger(orderTotal)).toBe(true);
+      expect(orderTotal).toBe(4494);
     });
   });
 
