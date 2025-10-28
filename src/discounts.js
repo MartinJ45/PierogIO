@@ -54,7 +54,9 @@ function applyCoupon(code, order) {
         if (!firstSixPack) {
           firstSixPack = item;
         } else {
-          discount += Math.floor(item.unitPriceCents * item.qty * 0.5);
+            if (firstSixPack.filling && item.filling && firstSixPack.filling === item.filling) {
+              discount += Math.floor(item.unitPriceCents * item.qty * 0.5);
+            }
           break;
         }
       }
