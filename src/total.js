@@ -59,6 +59,10 @@ function total(order, context) {
     orderTotal = formatted + "00";
     orderTotal = parseInt(orderTotal);
   }
+
+  if(order.qty == 0){
+    return 0;
+  }
   
   return orderTotal;
 }
