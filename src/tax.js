@@ -21,6 +21,9 @@ function tax(order, delivery) {
       hasHotItems = false;
     }
     if (item.kind === 'hot') {
+      const taxRate = TaxAPI.lookup(item.kind);
+      const itemTax = Math.floor(itemTotal * taxRate);
+      totalTax += itemTax;
       hasHotItems = true;
     }
   }
