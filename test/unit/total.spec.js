@@ -37,4 +37,21 @@ describe('Order Calculations', () => {
     });
   });
 
+  describe('edge cases for order total', () => {
+
+    it('applies rush surcharge for an empty order (no items)', () => {
+      const order = { items: [] };
+      const context = {
+        profile: { tier: 'guest' },
+        delivery: { zone: 'local', rush: true },
+      };
+
+      const result = total(order, context);
+      expect(Number.isInteger(result)).toBe(true);
+      // deliveryFee => 299 for rush (no items)
+      expect(result).toBe(299);
+    });
+
+  });
+
 });

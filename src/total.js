@@ -49,10 +49,11 @@ function total(order, context) {
   const orderDelivery = deliveryFee(order, delivery, profile);
   const orderTax = tax(order, delivery);
   let orderTotal = orderSubtotal - orderDiscounts + orderDelivery + orderTax;
-  
-  if (delivery.rush) {
-    orderTotal += 299;
-  }
+
+  // This was causing double application of rush fee - it is already applied in delivery.js file
+  // if (delivery.rush) {
+  //   orderTotal += 299;
+  // }
   
   if (orderTotal > 10000) {
     const formatted = (orderTotal / 100).toFixed(2);
