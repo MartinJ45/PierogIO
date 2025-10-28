@@ -35,6 +35,34 @@ describe('Order Calculations', () => {
       expect(orderTotal).toBeGreaterThan(0);
       expect(Number.isInteger(orderTotal)).toBe(true);
     });
+
+    it('applies FIRST10 coupon as 10% off orders $20 or more', () => {
+      // Create an order with subtotal >= $20.00 (2000 cents)
+      const order = {
+        items: [
+          {
+            sku: 'P12-CHEESE',
+            title: '12-pack Cheese',
+            kind: 'hot',
+            filling: 'cheese',
+            qty: 2,
+            unitPriceCents: 1200,
+            addOns: [],
+          }
+        ]
+      };
+
+      const profile = { tier: 'guest' };
+      const coupon = 'FIRST10';
+
+      // discounts() should return a positive cents amount equal to 10% of subtotal
+      const discountAmount = discounts(order, profile, coupon);
+      const expectedDiscount = Math.floor(subtotal(order) * 0.10);
+
+      expect(discountAmount).toBe(expectedDiscount);
+    });
   });
+
+
 
 });
