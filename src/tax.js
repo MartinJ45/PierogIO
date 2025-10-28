@@ -12,19 +12,14 @@ function tax(order, delivery) {
   let totalTax = 0;
 
   for (const item of order.items) {
-    const itemTotal = item.unitPriceCents * item.qty;
-
-    if (item.kind === 'frozen') {
-      const taxRate = TaxAPI.lookup(item.kind);
-      const itemTax = Math.floor(itemTotal * taxRate);
-      totalTax += itemTax;
-      hasHotItems = false;
-    }
     if (item.kind === 'hot') {
       hasHotItems = true;
+      const itemTotal = item.unitPriceCents * item.qty;
+      const taxRate = TaxAPI.lookup(item.kind) * 0.0001;
+      const itemTax = Math.floor(itemTotal * taxRate);
+      totalTax += itemTax;
     }
   }
-
   return totalTax;
 }
 
