@@ -47,7 +47,7 @@ function deliveryFee(order, delivery, profile) {
     threshold = freeDeliveryThresholds['guest'];
   }
 
-  if (discountedSubtotal > threshold) {
+  if (discountedSubtotal >= threshold) {
     if (delivery.rush) {
       return 299;
     }

@@ -36,5 +36,19 @@ describe('Order Calculations', () => {
       expect(Number.isInteger(orderTotal)).toBe(true);
     });
   });
+   // New test to cover free-delivery edge where discounted subtotal equals threshold
+  describe('deliveryFee edge cases', () => {
+    it('is free when discounted subtotal equals guest threshold (5000 cents)', () => {
+      const order = {
+        items: [
+          { unitPriceCents: 2500, qty: 2 } // 2500 * 2 = 5000 (equals guest threshold)
+        ]
+      };
+      const delivery = { zone: 'local', rush: false };
+      const profile = { tier: 'guest' };
+
+      expect(deliveryFee(order, delivery, profile)).toBe(0);
+    });
+  });
 
 });
