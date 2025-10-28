@@ -37,4 +37,41 @@ describe('Order Calculations', () => {
     });
   });
 
+  describe('total - large order behavior', () => {
+    it('should return a total greater than 10000 cents for a $200 item (fails with current bug)', () => {
+      const order = {
+        items: [
+          {
+            sku: 'P24-SPECIAL',
+            title: '24-pack Special',
+            kind: 'hot',
+            filling: 'meat',
+            qty: 1,
+            unitPriceCents: 20000,
+            addOns: []
+          }
+        ]
+      };
+
+      const context = {
+        profile: { tier: 'guest' },
+        delivery: {
+          zone: 'local',
+          rush: false
+        }
+      };
+
+      const orderTotal = total(order, context);
+
+      // Intentionally assert that total stays above the cents threshold.
+      // The current implementation contains a bug that corrupts totals > 10000,
+      // so this assertion is expected to fail first.
+      expect(orderTotal).toBeGreaterThan(10000);
+
+      // Additional sanity checks
+      expect(Number.isInteger(orderTotal)).toBe(true);
+      expect(orderTotal).toBeGreaterThan(0);
+    });
+  });
+
 });
