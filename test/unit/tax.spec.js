@@ -25,7 +25,7 @@ describe('Tax Calculations', () => {
     const taxAmount = tax(order, delivery);
     
     // Expected: 699 * 6 = 4194 cents
-    // Tax at 8% (0.08): 4194 * 0.08 = 335.52, floored to 335 
+    // Tax at 8% (0.08): 4194 * 0.08 = 335.52, floored to 335
     const expectedTax = Math.floor(699 * 6 * 0.08);
     
     expect(taxAmount).toBe(expectedTax);
