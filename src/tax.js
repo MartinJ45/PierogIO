@@ -18,14 +18,14 @@ function tax(order, delivery) {
       const taxRate = TaxAPI.lookup(item.kind);
       const itemTax = Math.floor(itemTotal * taxRate);
       totalTax += itemTax;
-      hasHotItems = false;
+      // hasHotItems = false;
     }
     if (item.kind === 'hot') {
       hasHotItems = true;
     }
   }
 
-  return totalTax;
+  return { totalTax, hasHotItems };
 }
 
 module.exports = { tax };

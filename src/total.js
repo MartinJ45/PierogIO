@@ -47,8 +47,9 @@ function total(order, context) {
   const orderSubtotal = subtotal(order);
   const orderDiscounts = discounts(order, profile, coupon);
   const orderDelivery = deliveryFee(order, delivery, profile);
-  const orderTax = tax(order, delivery);
-  let orderTotal = orderSubtotal - orderDiscounts + orderDelivery + orderTax;
+  const { totalTax, hasHotItem } = tax(order, delivery);
+  // console.log({ orderSubtotal, orderDiscounts, orderDelivery, orderTax });
+  let orderTotal = orderSubtotal - orderDiscounts + orderDelivery + totalTax;
   
   if (delivery.rush) {
     orderTotal += 299;
