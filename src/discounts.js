@@ -71,6 +71,15 @@ function applyCoupon(code, order) {
     }
     return Math.floor(subtotal * discount);
   }
+
+  // New coupon code for free order
+  if (code === 'FREE100') {
+    let subtotal = 0;
+    for (const item of order.items) {
+      subtotal += item.unitPriceCents * item.qty;
+    }
+    return subtotal; // Full discount equal to subtotal
+  }
   
   return 0;
 }

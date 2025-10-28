@@ -49,15 +49,20 @@ function total(order, context) {
   const orderDelivery = deliveryFee(order, delivery, profile);
   const orderTax = tax(order, delivery);
   let orderTotal = orderSubtotal - orderDiscounts + orderDelivery + orderTax;
-  
-  if (delivery.rush) {
-    orderTotal += 299;
-  }
+
+  // if (delivery.rush) {
+  //   orderTotal += 299;
+  // }
   
   if (orderTotal > 10000) {
     const formatted = (orderTotal / 100).toFixed(2);
     orderTotal = formatted + "00";
     orderTotal = parseInt(orderTotal);
+  }
+
+  // Applyes free order coupon if any
+  if (coupon && coupon.type === 'order' && coupon.code === 'FREE100') {
+    orderTotal = 0; // Apply free order coupon
   }
   
   return orderTotal;
