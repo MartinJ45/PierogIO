@@ -35,6 +35,46 @@ describe('Order Calculations', () => {
       expect(orderTotal).toBeGreaterThan(0);
       expect(Number.isInteger(orderTotal)).toBe(true);
     });
+
+    it('should have standard volume pricing discounts', () => {
+      const order = {
+        items: [
+          {
+            sku: 'P24-POTATO', // could be any valid SKU (see README.md for examples)
+            title: '24-pack Potato',
+            kind: 'frozen', // could be 'hot' or 'frozen'
+            filling: 'potato', // could be 'potato', 'cheese', 'meat', etc.
+            qty: 24, // quantity of this item
+            unitPriceCents: 2099, // price per unit in cents
+            addOns: [], // could include 'sour-cream', 'fried-onion', 'bacon-bits'
+          }
+        ]
+      };
+      
+      const guestContext = {
+        profile: { tier: 'guest' }, // could be 'guest', 'regular', or 'vip'
+        delivery: {
+          zone: 'local', // could be 'local' or 'outer'
+          rush: false, // boolean indicating rush delivery
+        },
+        // coupon is optional and omitted here
+      };
+
+      const regularContext = {
+        profile: { tier: 'regular' }, // could be 'guest', 'regular', or 'vip'
+        delivery: {
+          zone: 'local', // could be 'local' or 'outer'
+          rush: false, // boolean indicating rush delivery
+        },
+        // coupon is optional and omitted here
+      };
+      
+      const guestTotal = total(order, guestContext);
+      const regularTotal = total(order, regularContext);
+      
+      expect(regularTotal).toBe(guestTotal)
+    });
+
   });
 
 });
