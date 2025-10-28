@@ -47,32 +47,28 @@ function discounts(order, profile, couponCode = null) {
 function applyCoupon(code, order) {
   if (code === 'PIEROGI-BOGO') {
     let discount = 0;
-    let firstSixPack = null;
-    
     for (const item of order.items) {
-      if (item.qty === 6) {
-        if (!firstSixPack) {
-          firstSixPack = item;
-        } else {
-          discount += Math.floor(item.unitPriceCents * item.qty * 0.5);
-          break;
-        }
+      if (item.sku.startsWith('P6-') && item.qty >= 2) {
+        discount += Math.floor(item.unitPriceCents * 0.5); // 50% off one 6-pack
+        break;
       }
     }
-    
     return discount;
   }
-  
+
   if (code === 'FIRST10') {
-    let discount = -0.10;
     let subtotal = 0;
     for (const item of order.items) {
       subtotal += item.unitPriceCents * item.qty;
     }
-    return Math.floor(subtotal * discount);
+
+    if (subtotal >= 2000) { // $20 threshold
+      return Math.round(subtotal * 0.10); // 10% off, rounded to nearest cent
+    }
+    return 0;
   }
-  
+
   return 0;
 }
 
-module.exports = { discounts };
+module.exports = { discounts, applyCoupon };
