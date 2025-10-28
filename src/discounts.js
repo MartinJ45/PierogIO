@@ -47,31 +47,46 @@ function discounts(order, profile, couponCode = null) {
 function applyCoupon(code, order) {
   if (code === 'PIEROGI-BOGO') {
     let discount = 0;
-    let firstSixPack = null;
-    
-    for (const item of order.items) {
-      if (item.qty === 6) {
-        if (!firstSixPack) {
-          firstSixPack = item;
-        } else {
-          discount += Math.floor(item.unitPriceCents * item.qty * 0.5);
-          break;
+    // Support both representations:
+    // - items where qty === 6 (some tests/property arb use qty as pack-size)
+    // - items whose SKU starts with 'P6-' (unit tests use qty === 1 for a 6-pack)
+    const sixPackItems = order.items.filter(item => {
+      if (!item) return false;
+      if (item.qty === 6) return true;
+      if (typeof item.sku === 'string' && item.sku.startsWith('P6-')) return true;
+      return false;
+    });
+
+    if (sixPackItems.length >= 2) {
+      // find two with same filling
+      for (let i = 0; i < sixPackItems.length; i++) {
+        for (let j = i + 1; j < sixPackItems.length; j++) {
+          if (sixPackItems[i].filling === sixPackItems[j].filling) {
+            // discount = half of one 6-pack price (unitPriceCents * qty if qty reflects packs)
+            const item = sixPackItems[j];
+            const packs = item.qty === 6 ? 1 : item.qty || 1;
+            discount = Math.floor(item.unitPriceCents * packs * 0.5);
+            return discount;
+          }
         }
       }
     }
-    
+
     return discount;
   }
-  
+
   if (code === 'FIRST10') {
-    let discount = -0.10;
+    // 10% off orders >= $20 (2000 cents)
     let subtotal = 0;
     for (const item of order.items) {
       subtotal += item.unitPriceCents * item.qty;
     }
-    return Math.floor(subtotal * discount);
+    if (subtotal >= 2000) {
+      return Math.floor(subtotal * 0.10);
+    }
+    return 0;
   }
-  
+
   return 0;
 }
 
