@@ -41,26 +41,28 @@ const { tax } = require('./tax');
  * @param {Object} context - Context containing profile, delivery, and optional coupon
  * @returns {number} - Total cost in cents
  */
-function total(order, context) {
-  const { profile, delivery, coupon = null } = context;
+  function total(order, context) {
+    const { profile, delivery, coupon = null } = context;
+    
+    const orderSubtotal = subtotal(order);
+    const orderDiscounts = discounts(order, profile, coupon);
+    const orderDelivery = deliveryFee(order, delivery, profile);  // Already includes rush fee if applicable
+    const orderTax = tax(order, delivery);
   
-  const orderSubtotal = subtotal(order);
-  const orderDiscounts = discounts(order, profile, coupon);
-  const orderDelivery = deliveryFee(order, delivery, profile);
-  const orderTax = tax(order, delivery);
-  let orderTotal = orderSubtotal - orderDiscounts + orderDelivery + orderTax;
-  
-  if (delivery.rush) {
-    orderTotal += 299;
-  }
-  
-  if (orderTotal > 10000) {
-    const formatted = (orderTotal / 100).toFixed(2);
-    orderTotal = formatted + "00";
-    orderTotal = parseInt(orderTotal);
-  }
-  
-  return orderTotal;
+    // Remove the duplicate rush fee addition
+    let orderTotal = orderSubtotal - orderDiscounts + orderDelivery + orderTax;
+    
+    // Simplify large number handling
+    if (orderTotal > 10000) {
+      orderTotal = Math.round(orderTotal); // Ensure integer cents
+    }
+    
+    return orderTotal;
 }
 
-module.exports = { total };
+  module.exports = { total };
+  
+ 
+
+
+

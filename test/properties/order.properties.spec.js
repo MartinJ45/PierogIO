@@ -53,5 +53,45 @@ describe('Property-Based Tests for Orders', () => {
       );
     });
 
-  });
+    it('VIP customers should pay delivery fee when under threshold', () => {
+      const order = {
+        items: [{
+          sku: 'P12-POTATO',
+          title: 'Potato 12-pack',
+          kind: 'frozen',
+          filling: 'potato',
+          qty: 1,
+          unitPriceCents: 1299,
+          addOns: []
+        }]
+      };
+
+      const context = {
+        profile: {
+          tier: 'vip'
+        },
+        delivery: {
+          zone: 'local',
+          rush: false
+        },
+        coupon: null
+      };
+
+      const result = total(order, context);
+      
+      const expectedBase = 1299;
+      const expectedDeliveryFee = 499;
+      const expected = expectedBase + expectedDeliveryFee;
+      
+      console.log({
+        result,
+        expectedBase,
+        expectedDeliveryFee,
+        expected,
+        difference: expected - result
+      });
+      
+      assert.equal(result, expected);  
+      });
+      });
 });
