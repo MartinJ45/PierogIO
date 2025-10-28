@@ -13,6 +13,12 @@ function deliveryFee(order, delivery, profile) {
     discountedSubtotal += item.unitPriceCents * item.qty;
   }
 
+  // If no items, skip volume discount logic
+  if (order.items.length === 0) {
+    // Handle empty order case explicitly
+    return delivery.rush ? 299 : 0;
+  }
+
   // Apply volume discounts to subtotal
   const volumeDiscounts = {
     'guest': { 12: 0.05, 24: 0.10 },
@@ -47,22 +53,18 @@ function deliveryFee(order, delivery, profile) {
     threshold = freeDeliveryThresholds['guest'];
   }
 
-  if (discountedSubtotal > threshold) {
-    if (delivery.rush) {
-      return 299;
-    }
-    return 0;
+  if (discountedSubtotal >= threshold) {
+    // Waive base fee but still apply rush surcharge if applicable
+    return delivery.rush ? 299 : 0;
   }
 
   // Base delivery fee by zone
   let fee = 0;
 
-  for (const item of order.items) {
-    if (delivery.zone === 'local') {
-      fee += 399;
-    } else if (delivery.zone === 'outer') {
-      fee += 699;
-    }
+  if (delivery.zone === 'local') {
+    fee = 399;
+  } else if (delivery.zone === 'outer') {
+    fee = 699;
   }
 
   if (delivery.rush) {

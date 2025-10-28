@@ -37,4 +37,46 @@ describe('Order Calculations', () => {
     });
   });
 
+  describe('Total Calculation', () => {
+    test('calculates total for a simple order', () => {
+      const order = {
+        items: [
+          { unitPriceCents: 699, qty: 2, kind: 'hot' },
+        ],
+      };
+      const delivery = { zone: 'local', rush: false };
+      const profile = { tier: 'guest' };
+      const couponCode = null;
+
+      const context = { profile, delivery, coupon: couponCode };
+      expect(total(order, context)).toBeGreaterThan(0);
+    });
+
+    test('includes all components in total', () => {
+      const order = {
+        items: [
+          { unitPriceCents: 699, qty: 2, kind: 'hot', addOns: ['sour-cream'] },
+          { unitPriceCents: 749, qty: 1, kind: 'frozen' },
+        ],
+      };
+      const delivery = { zone: 'outer', rush: true };
+      const profile = { tier: 'regular' };
+      const couponCode = 'FIRST10';
+
+      const context = { profile, delivery, coupon: couponCode };
+      const result = total(order, context);
+      expect(result).toBeGreaterThan(0);
+    });
+
+    test('handles empty order', () => {
+      const order = { items: [] };
+      const delivery = { zone: 'local', rush: false };
+      const profile = { tier: 'guest' };
+      const couponCode = null;
+
+      const context = { profile, delivery, coupon: couponCode };
+      expect(total(order, context)).toBe(0);
+    });
+  });
+
 });

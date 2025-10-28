@@ -32,7 +32,12 @@ function discounts(order, profile, couponCode = null) {
   // Coupon discounts
   if (couponCode) {
     const couponDiscount = applyCoupon(couponCode, order);
-    totalDiscount += couponDiscount;
+    if (couponDiscount < 0) {
+      console.warn('Coupon discount resulted in a negative value. Defaulting to 0.');
+      totalDiscount += 0;
+    } else {
+      totalDiscount += couponDiscount;
+    }
   }
   
   return totalDiscount;
@@ -64,7 +69,7 @@ function applyCoupon(code, order) {
   }
   
   if (code === 'FIRST10') {
-    let discount = -0.10;
+    let discount = 0.10; // Corrected to positive value
     let subtotal = 0;
     for (const item of order.items) {
       subtotal += item.unitPriceCents * item.qty;

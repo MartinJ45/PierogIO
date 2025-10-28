@@ -14,15 +14,18 @@ function tax(order, delivery) {
   for (const item of order.items) {
     const itemTotal = item.unitPriceCents * item.qty;
 
-    if (item.kind === 'frozen') {
+    if (item.kind === 'hot') {
       const taxRate = TaxAPI.lookup(item.kind);
       const itemTax = Math.floor(itemTotal * taxRate);
       totalTax += itemTax;
-      hasHotItems = false;
-    }
-    if (item.kind === 'hot') {
       hasHotItems = true;
     }
+  }
+
+  if (hasHotItems) {
+    const deliveryTaxRate = TaxAPI.lookup('delivery');
+    const deliveryFee = delivery.zone === 'local' ? 399 : 699;
+    totalTax += Math.floor(deliveryFee * deliveryTaxRate);
   }
 
   return totalTax;
