@@ -47,12 +47,11 @@ function total(order, context) {
   const orderSubtotal = subtotal(order);
   const orderDiscounts = discounts(order, profile, coupon);
   const orderDelivery = deliveryFee(order, delivery, profile);
-  const orderTax = tax(order, delivery);
+  // Pass computed delivery fee into tax so it can be taxed when appropriate
+  const orderTax = tax(order, delivery, orderDelivery);
   let orderTotal = orderSubtotal - orderDiscounts + orderDelivery + orderTax;
   
-  if (delivery.rush) {
-    orderTotal += 299;
-  }
+  // deliveryFee already includes rush surcharge when applicable, so do not add it again here
   
   if (orderTotal > 10000) {
     const formatted = (orderTotal / 100).toFixed(2);
