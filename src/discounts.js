@@ -12,7 +12,7 @@ function discounts(order, profile, couponCode = null) {
   // Volume pricing discounts
   const volumeDiscounts = {
     'guest': { 12: 0.05, 24: 0.10 },
-    'regular': { 12: 0.08, 24: 0.12 },
+    'regular': { 12: 0.05, 24: 0.10 },
     'vip': { 12: 0.05, 24: 0.10 }
   };
   
