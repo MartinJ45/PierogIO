@@ -8,7 +8,7 @@ const { deliveryFee } = require('./delivery');
  * @param {Object} delivery - Delivery information
  * @returns {number} - Tax amount in cents
  */
-function tax(order, delivery, profile) {
+function tax(order, delivery, orderDelivery) {
   let hasHotItems = false;
   let totalTax = 0;
 
@@ -25,7 +25,7 @@ function tax(order, delivery, profile) {
   }
 
   if (hasHotItems) {
-    totalTax += Math.floor(deliveryFee(order, delivery, profile) * 0.08);
+    totalTax += Math.floor(orderDelivery * 0.08);
   }
 
   return totalTax;
