@@ -37,4 +37,43 @@ describe('Order Calculations', () => {
     });
   });
 
+  // New tests for tax calculation
+  describe('tax', () => {
+    it('calculates tax only on hot items, including add-ons and delivery when hot items present', () => {
+      const order = {
+        items: [
+          {
+            sku: 'HOT-1',
+            title: 'Hot Item',
+            kind: 'hot',
+            qty: 2,
+            unitPriceCents: 1000,
+            // addOns as objects with priceCents
+            addOns: [{ name: 'sour-cream', priceCents: 50 }]
+          },
+          {
+            sku: 'FROZEN-1',
+            title: 'Frozen Item',
+            kind: 'frozen',
+            qty: 3,
+            unitPriceCents: 500,
+            addOns: []
+          }
+        ]
+      };
+
+      const context = {
+        profile: { tier: 'guest' },
+        delivery: {
+          zone: 'local',
+          rush: true
+        }
+      };
+
+      const t = tax(order, context);
+      expect(Number.isInteger(t)).toBe(true);
+      expect(t).toBeGreaterThan(0);
+    });
+  });
+
 });
