@@ -1,5 +1,6 @@
 const fc = require('fast-check');
 const { total } = require('../../src/total');
+const { tax } = require('../../src/tax');
 const { referenceTotal } = require('../../src/reference');
 
 describe('Property-Based Tests for Orders', () => {
@@ -53,5 +54,22 @@ describe('Property-Based Tests for Orders', () => {
       );
     });
 
+  });
+});
+
+describe('Should Error if Order is Null' , () => {
+  describe('tax', () => {
+    it('should throw error if order is null', () => {
+      const order = null;
+      const context = {
+        profile: { tier: 'guest' },
+        delivery: {
+          zone: 'local',
+          rush: false,
+        },
+      };
+      
+      expect(() => tax(order, context)).toThrow('Order is required');
+    });
   });
 });

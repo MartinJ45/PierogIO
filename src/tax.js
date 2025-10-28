@@ -10,7 +10,9 @@ const { TaxAPI } = require('../apis/tax-api');
 function tax(order, delivery) {
   let hasHotItems = false;
   let totalTax = 0;
-
+  if(order == null || order.items == null) {
+    throw new Error('Order is required');
+  }
   for (const item of order.items) {
     const itemTotal = item.unitPriceCents * item.qty;
 
