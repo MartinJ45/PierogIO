@@ -1,3 +1,4 @@
+// ...existing code...
 /**
  * Calculate delivery fee
  * 
@@ -47,22 +48,20 @@ function deliveryFee(order, delivery, profile) {
     threshold = freeDeliveryThresholds['guest'];
   }
 
-  if (discountedSubtotal > threshold) {
+  // Allow free delivery when discountedSubtotal is equal to or greater than threshold
+  if (discountedSubtotal >= threshold) {
     if (delivery.rush) {
       return 299;
     }
     return 0;
   }
 
-  // Base delivery fee by zone
+  // Base delivery fee by zone (flat per order)
   let fee = 0;
-
-  for (const item of order.items) {
-    if (delivery.zone === 'local') {
-      fee += 399;
-    } else if (delivery.zone === 'outer') {
-      fee += 699;
-    }
+  if (delivery.zone === 'local') {
+    fee = 399;
+  } else if (delivery.zone === 'outer') {
+    fee = 699;
   }
 
   if (delivery.rush) {
@@ -73,3 +72,4 @@ function deliveryFee(order, delivery, profile) {
 }
 
 module.exports = { deliveryFee };
+// ...existing code...
