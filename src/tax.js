@@ -14,12 +14,13 @@ function tax(order, delivery) {
   for (const item of order.items) {
     const itemTotal = item.unitPriceCents * item.qty;
 
-    if (item.kind === 'frozen') {
-      const taxRate = TaxAPI.lookup(item.kind);
+    // Use TaxAPI for both hot and frozen items so hot items are taxed
+    const taxRate = TaxAPI.lookup(item.kind);
+    if (typeof taxRate === 'number' && taxRate > 0) {
       const itemTax = Math.floor(itemTotal * taxRate);
       totalTax += itemTax;
-      hasHotItems = false;
     }
+
     if (item.kind === 'hot') {
       hasHotItems = true;
     }
