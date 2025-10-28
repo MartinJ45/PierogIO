@@ -18,6 +18,15 @@ describe('Order Calculations', () => {
             qty: 6, // quantity of this item
             unitPriceCents: 699, // price per unit in cents
             addOns: [], // could include 'sour-cream', 'fried-onion', 'bacon-bits'
+          }, 
+          {
+            sku: 'P6-POTATO', // could be any valid SKU (see README.md for examples)
+            title: '6-pack Potato',
+            kind: 'frozen', // could be 'hot' or 'frozen'
+            filling: 'potato', // could be 'potato', 'cheese', 'meat', etc.
+            qty: 6, // quantity of this item
+            unitPriceCents: 699, // price per unit in cents
+            addOns: [], // could include 'sour-cream', 'fried-onion', 'bacon-bits'
           }
         ]
       };
