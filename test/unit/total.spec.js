@@ -37,4 +37,31 @@ describe('Order Calculations', () => {
     });
   });
 
+  describe('total()', () => {
+    it('does not double-count rush delivery fee', () => {
+      const order = {
+        items: [
+          { id: 'pierogi-1', unitPriceCents: 1000, qty: 1, hot: false }
+        ]
+      };
+      const profile = { tier: 'guest' };
+      const delivery = { zone: 'local', rush: true };
+      const coupon = null;
+
+      const expected =
+        subtotal(order) -
+        discounts(order, profile, coupon) +
+        deliveryFee(order, delivery, profile) +
+        tax(order, delivery);
+
+      const actual = total(order, { profile, delivery, coupon });
+
+      assert.strictEqual(
+        actual,
+        expected,
+        `total() should equal subtotal - discounts + delivery + tax (no duplicate rush). expected=${expected} actual=${actual}`
+      );
+    });
+  });
+
 });
