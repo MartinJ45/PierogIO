@@ -35,6 +35,96 @@ describe('Order Calculations', () => {
       expect(orderTotal).toBeGreaterThan(0);
       expect(Number.isInteger(orderTotal)).toBe(true);
     });
+
+    it('should calculate complete order total', () => {
+      const order = {
+        items: [
+          {
+            sku: 'P6-SAUER', // could be any valid SKU (see README.md for examples)
+            title: '6-pack Sauerkraut',
+            kind: 'frozen', // could be 'hot' or 'frozen'
+            filling: 'meat', // could be 'potato', 'cheese', 'meat', etc.
+            qty: 6, // quantity of this item
+            unitPriceCents: 749, // price per unit in cents
+            addOns: [], // could include 'sour-cream', 'fried-onion', 'bacon-bits'
+          }
+        ]
+      };
+      
+      const context = {
+        profile: { tier: 'regular' }, // could be 'guest', 'regular', or 'vip'
+        delivery: {
+          zone: 'outer', // could be 'local' or 'outer'
+          rush: true, // boolean indicating rush delivery
+        },
+        // coupon is optional and omitted here
+      };
+      
+      const orderTotal = total(order, context);
+      expect(orderTotal).toBeGreaterThan(0);
+      expect(Number.isInteger(orderTotal)).toBe(true);
+    });
+
+    it('applying a coupon should not increase the order total', () => {
+      const baseOrder = {
+        items: [
+          {
+            sku: 'P6-POTATO',
+            title: '6-pack Potato',
+            kind: 'hot',
+            filling: 'potato',
+            qty: 6,
+            unitPriceCents: 699,
+            addOns: []
+          },
+          {
+            sku: 'P6-POTATO',
+            title: '6-pack Potato',
+            kind: 'hot',
+            filling: 'potato',
+            qty: 6,
+            unitPriceCents: 699,
+            addOns: []
+          },
+          {
+            sku: 'P6-POTATO',
+            title: '6-pack Potato',
+            kind: 'hot',
+            filling: 'potato',
+            qty: 6,
+            unitPriceCents: 699,
+            addOns: []
+          },
+          {
+            sku: 'P6-POTATO',
+            title: '6-pack Potato',
+            kind: 'hot',
+            filling: 'potato',
+            qty: 6,
+            unitPriceCents: 699,
+            addOns: []
+          }
+        ]
+      };
+
+      const ctxNoCoupon = {
+        profile: { tier: 'guest' },
+        delivery: { zone: 'local', rush: false },
+        coupon: null
+      };
+
+      const ctxWithCoupon = {
+        profile: { tier: 'guest' },
+        delivery: { zone: 'local', rush: false },
+        coupon: 'FIRST10'
+      };
+
+      const totalNoCoupon = total(baseOrder, ctxNoCoupon);
+      const totalWithCoupon = total(baseOrder, ctxWithCoupon);
+
+      expect(totalWithCoupon).toBeLessThanOrEqual(totalNoCoupon);
+    });
+
   });
 
 });
