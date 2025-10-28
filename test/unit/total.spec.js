@@ -76,4 +76,25 @@ describe('Order Calculations', () => {
     });
   });
 
+  describe('discounts', () => {
+    it('FIRST10 gives a positive 10% discount of subtotal', () => {
+      const order = {
+        items: [
+          { sku: 'P6-POTATO', title: '6-pack Potato', kind: 'hot', qty: 2, unitPriceCents: 1000, addOns: [] },
+          { sku: 'F3-CHEESE', title: '3-pack Cheese', kind: 'frozen', qty: 1, unitPriceCents: 500, addOns: [] }
+        ]
+      };
+      const profile = { tier: 'guest' };
+
+      let subtotalCents = 0;
+      for (const it of order.items) {
+        subtotalCents += it.unitPriceCents * it.qty;
+      }
+
+      const d = discounts(order, profile, 'FIRST10');
+      expect(Number.isInteger(d)).toBe(true);
+      expect(d).toBeGreaterThan(0);
+      expect(d).toBe(Math.floor(subtotalCents * 0.10));
+    });
+  });
 });
