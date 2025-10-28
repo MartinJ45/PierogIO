@@ -69,6 +69,11 @@ function applyCoupon(code, order) {
     for (const item of order.items) {
       subtotal += item.unitPriceCents * item.qty;
     }
+
+    if (subtotal < 2000){
+      return 0;
+    }
+
     return Math.floor(subtotal * discount);
   }
   
